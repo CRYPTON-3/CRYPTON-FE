@@ -72,9 +72,9 @@
       },
       "fileAssociations": [
         {
-          "ext": "cpt",
-          "name": "cpt Files",
-          "description": "cpt 확장자 파일"
+          "ext": "crypton",
+          "name": "crypton Files",
+          "description": "crypton 확장자 파일"
         }
       ]
     }
