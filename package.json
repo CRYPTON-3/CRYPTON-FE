@@ -72,9 +72,9 @@
       },
       "fileAssociations": [
         {
-          "ext": "*",
-          "name": "All Files",
-          "description": "모든 파일"
+          "ext": "cpt",
+          "name": "cpt Files",
+          "description": "cpt 확장자 파일"
         }
       ]
     }

@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { BrowserWindow, app, ipcMain, shell } from "electron";
+import { BrowserWindow, app, dialog, ipcMain, shell } from "electron";
 import path, { join } from "path";
 
 let mainWindow: BrowserWindow | null = null;
@@ -27,7 +27,6 @@ function createWindow(): void {
 
   mainWindow.on("ready-to-show", () => {
     mainWindow?.show();
-    mainWindow?.webContents.send("file-opened", process.argv);
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -44,6 +43,7 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId("com.electron");
+
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
@@ -61,13 +61,17 @@ app.whenReady().then(() => {
 app.on("ready", () => {
   app.on("open-file", (event, path) => {
     event.preventDefault();
-    console.log(`열리는 파일: ${path}`);
+    mainWindow?.webContents.send("file-opened", path);
 
-    if (mainWindow) {
-      mainWindow.webContents.send("file-opened", path);
+    // 추후 권한 체크 로직 추가 예정
+    if (true) {
+      // 애플리케이션이 백그라운드로 실행 중일 때 에러 메시지 띄우기
+      dialog.showErrorBox("파일 열기 오류", "파일을 열람할 권한이 없습니다.");
+      return;
     }
   });
 });
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
