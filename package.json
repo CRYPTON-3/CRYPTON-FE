@@ -30,7 +30,6 @@
     "fs-extra": "^11.2.0",
     "lucide-react": "^0.309.0",
     "react-router-dom": "^6.26.0",
-    "react-scripts": "^5.0.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {

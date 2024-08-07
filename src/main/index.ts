@@ -16,17 +16,18 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: true,
-      contextIsolation: true
-    }
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
   });
 
   // 개발자 도구 열기
-  if (is.dev) {
-    mainWindow.webContents.openDevTools(); // 개발자 도구를 엽니다.
-  }
+
+  mainWindow.webContents.openDevTools(); // 개발자 도구를 엽니다.
 
   mainWindow.on("ready-to-show", () => {
     mainWindow?.show();
+    mainWindow?.webContents.send("file-opened", process.argv);
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -43,23 +44,6 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId("com.electron");
-  console.log("App is ready");
-
-  const pathToOpen = process.argv[1];
-  console.log(process.argv);
-  if (pathToOpen) {
-    console.log(`열리는 파일: ${pathToOpen}`);
-    mainWindow?.webContents.send("file-opened", path);
-  }
-
-  // macOS에서 애플리케이션이 재사용될 때의 이벤트 처리
-  app.on("open-file", (event, path) => {
-    event.preventDefault();
-    // 파일을 처리하는 로직
-    console.log(`열리는 파일: ${path}`);
-    // 필요한 경우, 파일 내용을 읽고 처리하는 로직을 추가
-  });
-
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
@@ -67,12 +51,23 @@ app.whenReady().then(() => {
   handleWindowEvents();
 
   createWindow();
+  console.log("앱 실행");
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
+app.on("ready", () => {
+  app.on("open-file", (event, path) => {
+    event.preventDefault();
+    console.log(`열리는 파일: ${path}`);
+
+    if (mainWindow) {
+      mainWindow.webContents.send("file-opened", path);
+    }
+  });
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();

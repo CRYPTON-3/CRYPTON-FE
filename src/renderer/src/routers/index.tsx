@@ -3,7 +3,7 @@ import GroupDetailsPage from "@renderer/pages/GroupDetails";
 import LandingPage from "@renderer/pages/Landing";
 import MainPage from "@renderer/pages/Main";
 import MyPage from "@renderer/pages/MyPage";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
 
 function Routers() {
   return (

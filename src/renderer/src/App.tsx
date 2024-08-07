@@ -10,10 +10,10 @@ export default function App() {
         defaultOptions: {
           queries: {
             staleTime: 1 * 60 * 1000, // 1분
-            gcTime: 5 * 60 * 1000 // 5분
-          }
-        }
-      })
+            gcTime: 5 * 60 * 1000, // 5분
+          },
+        },
+      }),
   );
 
   return (

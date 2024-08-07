@@ -17,11 +17,25 @@ try {
       },
       maximize() {
         ipcRenderer.invoke("maximizeWindow");
-      }
-    }
+      },
+    },
   };
 
   contextBridge.exposeInMainWorld("context", options);
+
+  contextBridge.exposeInMainWorld("electron", {
+    ipcRenderer: {
+      on: (channel, func) => {
+        ipcRenderer.on(channel, (event, ...args) => func(...args));
+      },
+      send: (channel, data) => {
+        ipcRenderer.send(channel, data);
+      },
+      removeAllListeners: (channel) => {
+        ipcRenderer.removeAllListeners(channel);
+      },
+    },
+  });
 } catch (error) {
   console.error(error);
 }
